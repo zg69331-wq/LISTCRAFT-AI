@@ -1,15 +1,23 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from database import Base, engine
+from routers import auth
+
+# Tables database mein bana do (agar nahi hain)
+Base.metadata.create_all(bind=engine)
+
 app = FastAPI(title="ListCraft AI")
 
-# Frontend ko backend se baat karne ki ijazat
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(auth.router)
+
 
 @app.get("/health")
 def health():
