@@ -22,3 +22,23 @@ export async function login(email: string, password: string) {
   localStorage.setItem("token", data.access_token);
   return data;
 }
+
+
+export async function generateListing(
+  image: File,
+  marketplace: string,
+  keywords: string
+) {
+  const form = new FormData();
+  form.append("image", image);
+  form.append("marketplace", marketplace);
+  form.append("keywords", keywords);
+
+  const res = await fetch(`${API_URL}/generate-listing`, {
+    method: "POST",
+    body: form,
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.detail || "Listing nahi ban saki");
+  return data;
+}
