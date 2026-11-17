@@ -34,6 +34,13 @@ export default function DashboardPage() {
         Listing Generator
       </Link>
 
+
+      <Link href="/resize" className="mt-4 mr-3 inline-block rounded bg-blue-600 px-4 py-2 text-white">
+  Image Resizer
+</Link>
+
+
+
       <button
         onClick={logout}
         className="mt-4 rounded bg-red-600 px-4 py-2 text-white"

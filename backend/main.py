@@ -2,8 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from database import Base, engine
-from routers import auth, listings
-
+from routers import auth, listings, images
 # Tables database mein bana do (agar nahi hain)
 Base.metadata.create_all(bind=engine)
 
@@ -18,6 +17,7 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(listings.router)
+app.include_router(images.router)
 
 
 @app.get("/health")

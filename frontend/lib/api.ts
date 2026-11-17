@@ -42,3 +42,33 @@ export async function generateListing(
   if (!res.ok) throw new Error(data.detail || "Listing nahi ban saki");
   return data;
 }
+
+
+export async function resizeImages(
+  images: File[],
+  platforms: string[],
+  customWidth: number,
+  customHeight: number,
+  fit: string,
+  bgColor: string,
+  fmt: string,
+  quality: number
+) {
+  const form = new FormData();
+  images.forEach((img) => form.append("images", img));
+  form.append("platforms", platforms.join(","));
+  form.append("custom_width", String(customWidth));
+  form.append("custom_height", String(customHeight));
+  form.append("fit", fit);
+  form.append("bg_color", bgColor);
+  form.append("fmt", fmt);
+  form.append("quality", String(quality));
+
+  const res = await fetch(`${API_URL}/resize`, { method: "POST", body: form });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Resize nahi ho saka");
+  }
+  return await res.blob();
+}
+
