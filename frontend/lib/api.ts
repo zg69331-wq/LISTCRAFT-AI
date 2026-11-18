@@ -52,7 +52,8 @@ export async function resizeImages(
   fit: string,
   bgColor: string,
   fmt: string,
-  quality: number
+  quality: number,
+  removeBg: boolean
 ) {
   const form = new FormData();
   images.forEach((img) => form.append("images", img));
@@ -63,6 +64,7 @@ export async function resizeImages(
   form.append("bg_color", bgColor);
   form.append("fmt", fmt);
   form.append("quality", String(quality));
+  form.append("remove_bg", String(removeBg));
 
   const res = await fetch(`${API_URL}/resize`, { method: "POST", body: form });
   if (!res.ok) {

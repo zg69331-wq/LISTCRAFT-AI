@@ -27,6 +27,7 @@ async def resize(
     bg_color: str = Form("white"),
     fmt: str = Form("jpg"),
     quality: int = Form(90),
+    remove_bg: bool = Form(False),
 ):
     if len(images) > MAX_FILES:
         raise HTTPException(400, f"Ek baar mein {MAX_FILES} se zyada photos nahi")
@@ -54,7 +55,7 @@ async def resize(
         files.append((f.filename, data))
 
     try:
-        zip_bytes = process_batch(files, plat_list, custom, fit, bg_color, fmt, quality)
+                zip_bytes = process_batch(files, plat_list, custom, fit, bg_color, fmt, quality, remove_bg)
     except Exception as e:
         raise HTTPException(500, f"Resize error: {e}")
 

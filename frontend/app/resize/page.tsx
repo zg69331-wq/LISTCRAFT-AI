@@ -21,6 +21,7 @@ export default function ResizePage() {
   const [quality, setQuality] = useState(90);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [removeBg, setRemoveBg] = useState(false);
 
   function toggle(id: string) {
     setPlatforms((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
@@ -31,7 +32,7 @@ export default function ResizePage() {
     setError("");
     setLoading(true);
     try {
-      const blob = await resizeImages(files, platforms, cw, ch, fit, bg, fmt, quality);
+      const blob = await resizeImages(files, platforms, cw, ch, fit, bg, fmt, quality, removeBg);
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -116,6 +117,16 @@ export default function ResizePage() {
           <input type="range" min={40} max={100} value={quality} onChange={(e) => setQuality(Number(e.target.value))} className="block w-full" />
         </label>
       </div>
+            <label className="mb-4 block">
+        <input
+          type="checkbox"
+          checked={removeBg}
+          onChange={(e) => setRemoveBg(e.target.checked)}
+          className="mr-2"
+        />
+        Background hatao (AI, thora slow hai)
+      </label>
+
 
       <button
         onClick={handleResize}
