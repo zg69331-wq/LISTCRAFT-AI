@@ -1,4 +1,5 @@
 import json
+import time
 
 from google import genai
 from google.genai import types
@@ -19,7 +20,10 @@ def generate_listing(image_bytes: bytes, mime_type: str, marketplace: str, keywo
         raise ValueError("GEMINI_API_KEY .env mein nahi mili")
 
     rules = RULES[marketplace]
-    client = genai.Client(api_key=GEMINI_API_KEY)
+    client = genai.Client(
+        api_key=GEMINI_API_KEY,
+        http_options=types.HttpOptions(timeout=60_000),  # 60 second se zyada nahi rukega
+    )
 
     prompt = f"""
 You are an expert e-commerce SEO copywriter.
@@ -37,11 +41,22 @@ Return ONLY JSON with keys:
 title, short_description, description, tags, attributes
 """
 
-    response = client.models.generate_content(
-        model=GEMINI_MODEL,
-        contents=[types.Part.from_bytes(data=image_bytes, mime_type=mime_type), prompt],
-        config=types.GenerateContentConfig(response_mime_type="application/json"),
-    )
+    response = None
+    for attempt in range(3):
+        try:
+            response = client.models.generate_content(
+                model=GEMINI_MODEL,
+                contents=[types.Part.from_bytes(data=image_bytes, mime_type=mime_type), prompt],
+                config=types.GenerateContentConfig(response_mime_type="application/json"),
+            )
+            break
+        except Exception as e:
+            msg = str(e)
+            busy = "503" in msg or "UNAVAILABLE" in msg
+            if busy and attempt < 2:
+                time.sleep(3 * (attempt + 1))  # 3 sec, phir 6 sec ruk kar dobara
+                continue
+            raise
     data = json.loads(response.text)
 
     # AI ki galti pakro: rules zabardasti lagao
