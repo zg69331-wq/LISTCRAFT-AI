@@ -303,3 +303,67 @@ export function getScrape(id: number) {
 export function deleteScrape(id: number) {
   return apiJson<{ deleted: boolean }>(`/scrapes/${id}`, { method: "DELETE" }, "Delete nahi ho saka");
 }
+
+export type KeywordItem = {
+  keyword: string;
+  score: number;
+  sources: string[];
+  words: number;
+  kind: "question" | "long-tail" | "short";
+  fits_etsy_tag: boolean;
+};
+
+export type KeywordResult = {
+  seed: string;
+  mode: "quick" | "deep";
+  total: number;
+  long_tail: number;
+  questions: number;
+  etsy_fit: number;
+  sources: Record<
+    string,
+    { status: "ok" | "failed"; ok: number; failed: number; found: number; error: string }
+  >;
+  keywords: KeywordItem[];
+  groups: Record<string, string[]>;
+  modifiers: { word: string; count: number }[];
+};
+
+export function researchKeywords(seed: string, sources: string[], mode: "quick" | "deep") {
+  return apiJson<KeywordResult>(
+    "/keywords",
+    { method: "POST", body: JSON.stringify({ seed, sources, mode }) },
+    "Research nahi ho saka"
+  );
+}
+
+export async function createVideo(
+  images: File[],
+  aspect: string,
+  seconds: number,
+  transition: string,
+  motion: boolean,
+  fit: string,
+  caption: string
+) {
+  const form = new FormData();
+  images.forEach((img) => form.append("images", img));
+  form.append("aspect", aspect);
+  form.append("seconds", String(seconds));
+  form.append("transition", transition);
+  form.append("motion", String(motion));
+  form.append("fit", fit);
+  form.append("caption", caption);
+
+  const res = await fetch(`${API_URL}/video`, {
+    method: "POST",
+    headers: authHeaders(),
+    body: form,
+  });
+  checkAuth(res);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(typeof err.detail === "string" ? err.detail : "Video nahi ban saki");
+  }
+  return await res.blob();
+}

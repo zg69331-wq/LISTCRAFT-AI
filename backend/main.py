@@ -2,7 +2,7 @@ from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from database import Base, engine
-from routers import auth, listings, images, vector, analyzer, mockups, scraper
+from routers import auth, listings, images, vector, analyzer, mockups, scraper, keywords, videos
 from security import get_current_user
 
 # Tables database mein bana do (agar nahi hain)
@@ -28,6 +28,8 @@ app.include_router(vector.router, dependencies=protected)
 app.include_router(analyzer.router, dependencies=protected)
 app.include_router(mockups.router, dependencies=protected)
 app.include_router(scraper.router, dependencies=protected)
+app.include_router(keywords.router, dependencies=protected)
+app.include_router(videos.router, dependencies=protected)
 
 
 @app.get("/health")

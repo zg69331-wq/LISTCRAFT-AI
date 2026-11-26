@@ -7,6 +7,7 @@ import {
   Images,
   PenTool,
   Search,
+  TrendingUp,
   Video,
 } from "lucide-react";
 
@@ -47,11 +48,18 @@ const MODULES = [
     desc: "Store ka link do, products, summary aur main points pao, CSV download karo.",
     icon: Globe,
   },
-];
-
-const UPCOMING = [
-  { title: "Video Maker", icon: Video },
-  { title: "Product Research", icon: Search },
+  {
+    href: "/research",
+    title: "Keyword Research",
+    desc: "Ek keyword se Google, Amazon, eBay aur Etsy ke naye keyword ideas pao.",
+    icon: TrendingUp,
+  },
+  {
+    href: "/video",
+    title: "Video Maker",
+    desc: "Product ki photos se chhoti slideshow video banao, listing ya social media ke liye.",
+    icon: Video,
+  },
 ];
 
 export default function DashboardPage() {
@@ -82,26 +90,6 @@ export default function DashboardPage() {
               />
             </span>
           </Link>
-        ))}
-      </div>
-
-      <h2 className="mb-4 mt-12 text-sm font-semibold uppercase tracking-wide text-muted">
-        Coming soon
-      </h2>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {UPCOMING.map(({ title, icon: Icon }) => (
-          <div
-            key={title}
-            className="flex items-center gap-3 rounded-2xl border border-dashed border-line bg-surface/60 p-4"
-          >
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-canvas text-muted">
-              <Icon size={20} />
-            </span>
-            <span className="flex-1 text-sm font-medium text-muted">{title}</span>
-            <span className="rounded-full bg-canvas px-2 py-0.5 text-[10px] font-semibold uppercase text-muted">
-              Soon
-            </span>
-          </div>
         ))}
       </div>
     </main>

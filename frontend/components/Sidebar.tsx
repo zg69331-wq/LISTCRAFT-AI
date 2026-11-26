@@ -10,6 +10,8 @@ import {
   ImagePlus,
   PenTool,
   Search,
+  TrendingUp,
+  Video,
   LogOut,
   Menu,
   Sparkles,
@@ -24,6 +26,8 @@ const NAV = [
   { href: "/analyzer", label: "Listing Analyzer", icon: Search },
   { href: "/mockups", label: "Mockup Generator", icon: ImagePlus },
   { href: "/scraper", label: "Store Scraper", icon: Globe },
+  { href: "/research", label: "Keyword Research", icon: TrendingUp },
+  { href: "/video", label: "Video Maker", icon: Video },
 ];
 
 function Brand() {
